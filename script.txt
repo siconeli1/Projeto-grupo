@@ -1,0 +1,73 @@
+CREATE TABLE aluno (
+    id_alu serial,
+    nome_alu character varying(50),
+    logradouro_alu character varying(50),
+    numero_alu integer,
+    bairro_alu character varying(30),
+    cidade_alu character varying(30),
+    estado_alu character varying(2),
+    cep_alu character varying(15),
+    cpf_alu character varying(14) unique,
+    rg_alu character varying(15),
+    CONSTRAINT aluno_pkey PRIMARY KEY (id_alu)
+);
+
+
+CREATE TABLE professor (
+    id_prof serial,
+    nome_prof character varying(50),
+    cnpj_prof character varying(20),
+    cpf_prof character varying(14) UNIQUE,
+    tel_prof character varying(20),
+    data_cad_prof date,
+    CONSTRAINT professor_pkey PRIMARY KEY (id_prof)
+);
+
+
+
+CREATE TABLE curso (
+    id_cur serial,
+    nome_cur character varying(50),
+    desc_cur character varying(50),
+    cod_bar_cur character varying(20),
+    p_custo_cur double precision,
+    p_venda_cur double precision,
+    id_prof integer,
+    CONSTRAINT curso_pkey PRIMARY KEY (id_cur),
+    CONSTRAINT professor_fk FOREIGN KEY (id_prof) REFERENCES professor(id_prof)
+);
+
+
+CREATE TABLE curso_venda (
+    id_cur integer,
+    id_vend integer,
+    val_cur double precision,
+    qtd_cur integer,
+    CONSTRAINT curso_venda_id_cur_fkey FOREIGN KEY (id_cur) REFERENCES curso (id_cur),
+    CONSTRAINT curso_venda_id_vend_fkey FOREIGN KEY (id_vend) REFERENCES venda (id_vend)
+);
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE funcionario
+(
+    id_fun serial,
+    nome_fun character varying(50),
+    cpf_fun character varying(50),
+    login_fun character varying(50),
+    senha_fun character varying(100),
+    tipo_fun character varying(50),
+    CONSTRAINT funcionario_pkey PRIMARY KEY (id_fun),
+    CONSTRAINT funcionario_cpf_key UNIQUE (cpf_fun),
+    CONSTRAINT funcionario_login_key UNIQUE (login_fun)
+)
+
+CREATE TABLE venda
+(
+    id_vend serial,
+    dat_vend date,
+    val_vend double precision,
+    id_cli integer,
+    CONSTRAINT venda_pkey PRIMARY KEY (id_vend),
+    CONSTRAINT venda_id_alu_fkey FOREIGN KEY (id_cli) REFERENCES aluno (id_alu)
+);
